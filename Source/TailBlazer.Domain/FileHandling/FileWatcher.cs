@@ -7,13 +7,6 @@ using TailBlazer.Domain.Annotations;
 
 namespace TailBlazer.Domain.FileHandling
 {
-    public enum FileStatus
-    {
-        Loading,
-        Error,
-        Loaded
-    }
-
     public class FileWatcher : IFileWatcher
     {
         public IObservable<FileStatus> Status { get; }
@@ -43,11 +36,10 @@ namespace TailBlazer.Domain.FileHandling
                 ? fileInfo.WatchFile(scheduler: scheduler)
                 : fileInfo.WatchFile(scheduler: scheduler).ScanFromEnd())
                 .Switch();
-            
+
             Latest = shared
                 .TakeWhile(notification => notification.Exists).Repeat()
                 .Replay(1).RefCount();
-                        
 
             Status = fileInfo.WatchFile(scheduler: scheduler).Select(notificiation =>
             {

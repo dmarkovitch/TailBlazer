@@ -88,9 +88,9 @@ namespace TailBlazer.Domain.FileHandling
                     var added = currentPage.Except(previous, Line.TextStartComparer).ToArray();
                     var removed = previous.Except(currentPage, Line.TextStartComparer).ToArray();
 
-
                     lines.Edit(innerCache =>
                     {
+                        if (currentPage.Length == 0) innerCache.Clear();
                         if (removed.Any()) innerCache.Remove(removed);
                         if (added.Any()) innerCache.AddOrUpdate(added);
                     });
